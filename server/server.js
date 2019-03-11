@@ -2,7 +2,7 @@ var path = require("path");
 var http = require('http');
 var express = require("express");
 var socketIO = require('socket.io');
-var {generateMessage} = require("./utils/message.js");
+var {generateMessage,generateLocationMessage} = require("./utils/message.js");
 
 
 var publicPath = path.join(__dirname,"/../public");
@@ -25,6 +25,10 @@ io.on('connection',function(socket){
         io.emit('newMessage',generateMessage(message.from,message.text));
         callback('This is from the server.');
         // socket.broadcast.emit('newMessage',generateMessage(message.from,message.text));
+    });
+    
+    socket.on('createLocationMessage',function(coords){
+        io.emit('newLocationMessage',generateLocationMessage('Admin',coords.latitude,coords.longitude));
     });
     
     socket.on('disconnect',function(){
